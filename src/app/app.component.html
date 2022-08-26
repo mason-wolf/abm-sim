@@ -1,30 +1,52 @@
 
 <div class="container-fluid">
-  <div class="row" style="margin-top:50px;padding:1em;">
-    <div class="col-12">
-      <div class="btn-group">
-        <button type="button" class="btn dropdown-toggle shadow-none" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-          Actions
+  <div class="row" style="padding:.5em;">
+    <div class="col-12" style="padding: 0px;">
+      <h1>ABM-SIM <img src="./assets/logo.png" width="50"><sub style="font-size:10px;margin-left:10px;">AIR BATTLE MANAGEMENT SIMULATOR</sub></h1>
+    </div>
+      <div class="col unit-box" *ngFor="let aircraft of aircraftList">
+        {{ aircraft.id}}
+        <br>
+          <button id="btnGroupDrop1" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Command
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="#" (click)="move(aircraft, 'north')">Move North</a>
+            <a class="dropdown-item" href="#" (click)="move(aircraft, 'east')">Move East</a>
+            <a class="dropdown-item" href="#" (click)="move(aircraft, 'west')">Move West</a>
+            <a class="dropdown-item" href="#" (click)="move(aircraft, 'south')">Move South</a>
+          </div>
+      </div>
+      <div class="col unit-box">
+        ALL UNITS
+        <button id="btnGroupDrop1" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Command
         </button>
-        <div class="dropdown-menu dropdown-menu-lg-right">
-          <button class="dropdown-item" type="button" (click)="move($event)">Move To</button>
-          <button class="dropdown-item" type="button">Another action</button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="#" (click)="moveAll('north')">Move North</a>
+          <a class="dropdown-item" href="#" (click)="moveAll('east')">Move East</a>
+          <a class="dropdown-item" href="#" (click)="moveAll('west')">Move West</a>
+          <a class="dropdown-item" href="#" (click)="moveAll('south')">Move South</a>
         </div>
       </div>
-  </div>
 </div>
 
 <div class="map-container">
   <div class="map-frame">
     <div id="map"></div>
   </div>
-  <div class="container-fluid">
-    <div class="row" style="width:100%;">
-      <div class="console"  #scrollBottom>
+      <div class="console" #scrollBottom>
         <span *ngFor="let log of logtext">
-          {{ log }} <br>
+         <span *ngIf="log.messageType=='info'" style="color:#00ff00;">
+          {{ log.message }} <br>
+         </span>
+         <span *ngIf="log.messageType=='warning'" style="color:yellow;">
+          {{ log.message }} <br>
+         </span>
         </span>
       </div>
-    </div>
   </div>
 </div>
+
+
+
