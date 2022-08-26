@@ -1,1 +1,132 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+.map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-top: 175px;
+}
+
+.map-frame {
+  height: 75%;
+  margin: 30px;
+}
+
+#map {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  background-color: rgb(51, 51, 51) !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav {
+  width: 100%;
+  height: 50px;
+  padding: 0em 1em 2em;
+  color:#fff;
+}
+
+.controls {
+  margin-top: -25px;
+  width: 100%;
+  padding: 1em;
+}
+
+.btn {
+  border: 1px solid #00ff00;
+  background-color: rgb(51, 51, 51);
+  color: #fff;
+  margin-right: 10px;
+  margin-top:5px;
+  padding: .5em;
+}
+
+.dropdown-menu {
+  background-color: #000;
+  color: #fff;
+  border:1px solid #00ff00;
+  padding: 0;
+}
+
+.dropdown-item {
+  color: #fff;
+  padding: .5em;
+}
+
+.dropdown-item:hover {
+  color: #000;
+  background-color: #00ff00;
+}
+
+.btn :hover {
+  background-color: #00ff00 !important;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn.active, .open>.dropdown-toggle.btn {
+  color: #000;
+  background-color: #00ff00;
+  border-color: #00ff00;
+  outline: none !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.console {
+  width: 100%;
+  height:150px;
+  margin-left:29px;
+  margin-top:-25px;
+  background-color: rgb(24, 24, 24);
+  border: 1px solid rgb(24, 24, 24);
+  color:#00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: auto;
+}
+
+
+/* popup-class*/
+
+.class-popup .leaflet-popup-content-wrapper {
+  background: #2980b9;
+  color: #fff;
+  font-size: 10px;
+  line-height: 10px;
+}
+
+.class-popup .leaflet-popup-content-wrapper a {
+  color: #2980b9;
+}
+
+.class-popup .leaflet-popup-tip-container {
+  width: 40px;
+  height: 1px;
+}
+
+.class-popup .leaflet-popup-tip {
+  background: #000;
+}
+
+
+/* tooltip-class*/
+
+.leaflet-tooltip.class-tooltip {
+  background: #000;
+  border: 2px solid #000;
+  color: cyan;
+  font-size: 8px;
+  font-style: bold;
+}
+
+.leaflet-tooltip-left.class-tooltip::before {
+  border: none !important
+}
+
+.leaflet-tooltip-right.class-tooltip::before {
+  border: none !important
+}
