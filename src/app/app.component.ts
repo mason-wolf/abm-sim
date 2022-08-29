@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { interval } from 'rxjs';
 import 'leaflet.animatedmarker/src/AnimatedMarker';
+import { newArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +14,10 @@ export class AppComponent {
   private map;
 
   aircraftList: any[] = [];
+  selectedAircraft: any;
   enemyList: any[] = [];
-
   logtext: any[] = [];
+  a: any;
   @ViewChild('scrollBottom') private scrollBottom: ElementRef;
 
   f16Icon = L.icon({
@@ -28,13 +30,16 @@ export class AppComponent {
 });
 
   migIcon = L.icon({
-    iconUrl: './assets/bogey-east.png',
+    iconUrl: './assets/bogey-west.png',
     iconColor: "#fff",
     iconSize:     [50, 50],
     iconAnchor:   [22, 94],
     popupAnchor:  [-3, -76],
     id: ""
   });
+
+  constructor() {
+  }
   private initMap(): void {
     this.map = L.map('map', {
       center: [ 39.8282, -98.5795 ],
@@ -52,7 +57,7 @@ export class AppComponent {
 
     let darkMap = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
     let openMap = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-    const tiles = L.tileLayer(openMap, {
+    const tiles = L.tileLayer(darkMap, {
       maxZoom: 18,
       minZoom: 3
     });
@@ -73,9 +78,9 @@ export class AppComponent {
       { "id" : "VIPER-4", "location" : [26, 35]},
       { "id" : "VIPER-5", "location" : [20, 32]},
       { "id" : "VIPER-6", "location" : [20, 35]},
-      { "id" : "BOGEY-1", "location" : [30, 60]},
-      { "id" : "BOGEY-2", "location" : [45, 55]},
-      { "id" : "BOGEY-3", "location" : [50, 42]},
+      { "id" : "BOGEY-1", "location" : [23, 45]},
+      { "id" : "BOGEY-2", "location" : [25, 46]},
+      { "id" : "BOGEY-3", "location" : [20, 44]},
     ]
 
 
@@ -93,8 +98,11 @@ export class AppComponent {
       else {
         newAircraft = L.marker([lat, long], {icon: this.f16Icon})
         .addTo(this.map).
-        bindPopup(`STATUS: OK`).
-        bindTooltip(squadron[aircraft]["id"], { permanent: true, direction: 'right', offset: [-65,-100], ...TooltipClass})
+        bindPopup(`
+        STATUS: OK<br>
+        LOCATION: <br>LAT:${ lat + "<br>LONG:" + long }
+        `).
+        bindTooltip(squadron[aircraft]["id"], { permanent: true, direction: 'right', offset: [-65,-100], ...TooltipClass});
         newAircraft.id = squadron[aircraft]["id"];
         this.aircraftList.push(newAircraft);
       }
@@ -159,27 +167,20 @@ export class AppComponent {
     let speed = .25;
     switch (direction) {
         case ('east'):
-          if (e.id.includes("BOGEY")) {
-            this.addLog("BANDIT IDENT " + location.lat + " LAT " + location.lng + " LONG", "warning");
-          }
-          else {
-            this.addLog(e.id + " PROCEEDING EAST", "info");
-          }
+          this.addLog(e.id + " PROCEEDING EAST", "info");
           this.changeDirection(e, "east");
             for (var i = 0; i <= 5; i++) {
                 setTimeout(() => {
-                    e.setLatLng([location.lat, location.lng + speed])
+                    e.setLatLng([location.lat, location.lng + speed]);
                     location = e.getLatLng();
+                   e.bindPopup(`
+                    STATUS: OK<br>
+                    LOCATION: <br>LAT:${ location.lat + "<br>LONG:" + location.lng }`)
                 }, 500 + (1000 * i));;
             }
         break;
         case ('north'):
-          if (e.id.includes("BOGEY")) {
-            this.addLog("BANDIT IDENT " + location.lat + " LAT " + location.lng + " LONG", "warning");
-          }
-          else {
-            this.addLog(e.id + " PROCEEDING NORTH", "info");
-          }
+          this.addLog(e.id + " PROCEEDING NORTH", "info");
           this.changeDirection(e, "north");
           for (var i = 0; i <= 5; i++) {
             setTimeout(() => {
@@ -189,12 +190,7 @@ export class AppComponent {
         }
         break;
         case ('west'):
-          if (e.id.includes("BOGEY")) {
-            this.addLog("BANDIT IDENT " + location.lat + " LAT " + location.lng + " LONG", "warning");
-          }
-          else {
-            this.addLog(e.id + " PROCEEDING WEST", "info");
-          }
+          this.addLog(e.id + " PROCEEDING WEST", "info");
           this.changeDirection(e, "west");
           for (var i = 0; i <= 5; i++) {
             setTimeout(() => {
@@ -204,12 +200,7 @@ export class AppComponent {
         }
         break;
         case ('south'):
-          if (e.id.includes("BOGEY")) {
-            this.addLog("BANDIT IDENT " + location.lat + " LAT " + location.lng + " LONG", "warning");
-          }
-          else {
-            this.addLog(e.id + " PROCEEDING SOUTH", "info");
-          }
+          this.addLog(e.id + " PROCEEDING SOUTH", "info");
           this.changeDirection(e, "south");
           for (var i = 0; i <= 5; i++) {
             setTimeout(() => {
@@ -241,33 +232,12 @@ moveAll(direction) {
       break;
   }
 }
-  constructor() {
-   }
-
   ngAfterViewInit(): void {
     this.initMap();
 
     interval(4000).subscribe(x => {
       this.addLog("NO INFO", "info");
     });
-
-    this.enemyList.forEach(enemy=> {
-      if (enemy.id=="BOGEY-1") {
-        interval(15000).subscribe(x => {
-          this.move(enemy, "west");
-        });
-      }
-      if (enemy.id=="BOGEY-2") {
-        interval(10000).subscribe(x => {
-          this.move(enemy, "east");
-        });
-      }
-      if (enemy.id=="BOGEY-3") {
-        interval(5000).subscribe(x => {
-          this.move(enemy, "south");
-        });
-      }
-    })
   }
 
   ngAfterViewChecked() {
